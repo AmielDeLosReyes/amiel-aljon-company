@@ -1,0 +1,70 @@
+spring:
+  application:
+    name: api-gateway
+    gateway:
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth-service/**
+          filters:
+            - RewritePath=/auth-service/(?<path>.*), /$\{path}
+          metadata:
+            api-docs-enabled: true
+  cloud:
+    globalcors:
+      corsConfigurations:
+        '[/**]':
+          allowedOrigins: "http://localhost:4200"
+          allowedHeaders: "*"
+          allowedMethods:
+            - GET
+            - POST
+            - PATCH
+            - DELETE
+    httpclient:
+      connect-timeout: 2000
+      response-timeout: 90s
+    discovery:
+      enabled: true
+      locator:
+        enabled: true
+        lowerCaseServiceId: true
+logging:
+  level:
+    reactor:
+      netty:
+        http:
+          client: INFO
+    org:
+      springframework:
+        cloud:
+          gateway: INFO
+
+# Gateway Host Context Path
+api-gateway:
+  context-path: /gateway-dev
+
+# eureka configs
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+rate:
+  limiter:
+    capacity: 200
+    tokens: 200
+    duration: 1
+
+server:
+  servlet:
+    context-path: ${api-gateway.context-path}
+  display-name: api-gateway
+  port: 8080
+
+
