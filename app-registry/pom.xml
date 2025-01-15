@@ -10,7 +10,6 @@
 	</parent>
 	<groupId>amiel-aljon</groupId>
 	<artifactId>app-registry</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>app-registry</name>
 	<description>Spring Cloud Eureka Service Registry</description>
 	<url/>
@@ -27,7 +26,7 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>23</java.version>
+		<java.version>17</java.version>
 		<spring-cloud.version>2024.0.0</spring-cloud.version>
 	</properties>
 	<dependencies>
