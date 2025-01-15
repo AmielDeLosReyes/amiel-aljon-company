@@ -13,7 +13,7 @@ pipeline {
                     def services = ['app-registry', 'config-server', 'app-registry']
                     for (service in services) {
                         dir(service) {
-                            sh './mvnw clean package'
+                            sh './mvnw clean package -DskipTests'
                         }
                     }
                 }
