@@ -1,0 +1,14 @@
+# Use OpenJDK 23 as a base image
+FROM openjdk:23-jdk-slim as build
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the JAR file from the build context (after it's built in the CI/CD pipeline)
+COPY target/api-gateway.jar /app/api-gateway.jar
+
+# Expose the port that the service will run on
+EXPOSE 8080
+
+# Command to run the service
+ENTRYPOINT ["java", "-jar", "/app/api-gateway.jar"]
