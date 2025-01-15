@@ -9,7 +9,14 @@ pipeline {
         }
         stage('Build JARs') {
             steps {
-                sh './mvnw clean package'
+                script {
+                    def services = ['api-gateway', 'app-registry', 'config-server']
+                    for (service in services) {
+                        dir(service) {
+                            sh './mvnw clean package'
+                        }
+                    }
+                }
             }
         }
         stage('Build Docker Images') {
