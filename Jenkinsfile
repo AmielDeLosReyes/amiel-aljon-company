@@ -10,7 +10,7 @@ pipeline {
         stage('Build JARs') {
             steps {
                 script {
-                    def services = ['api-gateway', 'app-registry', 'config-server']
+                    def services = ['app-registry', 'config-server', 'app-registry']
                     for (service in services) {
                         dir(service) {
                             sh './mvnw clean package'
