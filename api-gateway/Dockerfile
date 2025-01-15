@@ -1,5 +1,5 @@
 # Use OpenJDK 23 as a base image
-FROM openjdk:23-jdk-slim as build
+FROM openjdk:17-jdk-slim as build
 
 # Set the working directory
 WORKDIR /app
