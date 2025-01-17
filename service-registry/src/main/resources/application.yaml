@@ -1,0 +1,18 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: service-registry
+  cloud:
+    consul:
+      host: ${CONSUL_HOST:consul-server-client}       # Connect to the Consul Docker container
+      port: ${CONSUL_PORT:8500}       # Consul agent port exposed
+      discovery:
+        service-name: service-registry
+        register: true
+        enabled: true
+logging:
+  level:
+    org.springframework: INFO
+    com.example: DEBUG
