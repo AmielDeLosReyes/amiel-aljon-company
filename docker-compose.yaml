@@ -1,15 +1,30 @@
 version: '3.9'
 
 services:
-  app-registry:
-    image: app-registry-image
+  consul:
+    image: hashicorp/consul:latest
+    container_name: consul
+    ports:
+      - "8500:8500" # Consul UI
+      - "8600:8600/udp" # DNS queries
+    networks:
+      - app-network
+    command: agent -server -bootstrap -ui -client=0.0.0.0
+
+  service-registry:
+    image: service-registry-image
     build:
-      context: ./app-registry
+      context: ./service-registry
       dockerfile: Dockerfile
     ports:
       - "8761:8761"
+    depends_on:
+      - consul
     networks:
       - app-network
+    environment:
+      CONSUL_HOST: consul # Use the 'consul' container name
+      CONSUL_PORT: 8500
 
   config-server:
     image: config-server-image
@@ -18,8 +33,13 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8888:8888"
+    depends_on:
+      - consul
     networks:
       - app-network
+    environment:
+      CONSUL_HOST: consul
+      CONSUL_PORT: 8500
 
   api-gateway:
     image: api-gateway-image
@@ -29,10 +49,14 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - app-registry
+      - service-registry
       - config-server
+      - consul
     networks:
       - app-network
+    environment:
+      CONSUL_HOST: consul
+      CONSUL_PORT: 8500
 
 networks:
   app-network:

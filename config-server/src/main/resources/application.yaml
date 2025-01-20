@@ -4,6 +4,14 @@ spring:
   profiles:
     active: native
   cloud:
+    consul:
+      host: ${CONSUL_HOST:consul-server-client}       # Connect to the Consul Docker container
+      port: ${CONSUL_PORT:8500}       # Consul agent port exposed
+      discovery:
+        service-name: config-server
+        register: true
+        enabled: true
+        health-check-interval: 10s
     config:
       server:
         native:

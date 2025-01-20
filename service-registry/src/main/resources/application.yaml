@@ -12,7 +12,18 @@ spring:
         service-name: service-registry
         register: true
         enabled: true
+        health-check-interval: 10s
 logging:
   level:
     org.springframework: INFO
     com.example: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true

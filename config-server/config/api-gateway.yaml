@@ -1,17 +1,25 @@
 spring:
   application:
     name: api-gateway
+  cloud:
+    consul:
+      host: consul-server-client  # Consul container name
+      port: 8500
+      discovery:
+        enabled: true
+        service-name: api-gateway
+        prefer-ip-address: true
+        tags: ["gateway", "api"]
     gateway:
       routes:
         - id: auth-service
-          uri: lb://auth-service
+          uri: lb://auth-service  # Load-balanced route for the auth-service
           predicates:
             - Path=/auth-service/**
           filters:
             - RewritePath=/auth-service/(?<path>.*), /$\{path}
           metadata:
             api-docs-enabled: true
-  cloud:
     globalcors:
       corsConfigurations:
         '[/**]':
@@ -30,6 +38,7 @@ spring:
       locator:
         enabled: true
         lowerCaseServiceId: true
+
 logging:
   level:
     reactor:
@@ -45,26 +54,15 @@ logging:
 api-gateway:
   context-path: /gateway-dev
 
-# eureka configs
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    registerWithEureka: true
-    fetchRegistry: true
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
-
-rate:
-  limiter:
-    capacity: 200
-    tokens: 200
-    duration: 1
-
 server:
   servlet:
     context-path: ${api-gateway.context-path}
   display-name: api-gateway
   port: 8080
 
-
+management:
+  health:
+    discovery:
+      enabled: true
+    consul:
+      enabled: true
