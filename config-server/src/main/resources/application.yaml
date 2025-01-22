@@ -15,7 +15,7 @@ spring:
     config:
       server:
         native:
-          search-locations: file:/Users/amieldelosreyes/Desktop/Software Engineering/Amiel-Aljon Company/amiel-aljon-company/config-server/config
+          search-locations: file:${CONFIG_FILE_PATH}
 #        git: for remote git config server
 #          url:
 #          username:

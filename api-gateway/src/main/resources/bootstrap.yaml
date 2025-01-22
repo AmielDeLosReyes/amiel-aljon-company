@@ -40,9 +40,8 @@ log:
       path: ${log.eureka.path}/archive/
 
 #Configuration for Health endpoint
-endpoints:
-  health:
-    enabled: true
-    id: health
-    path: /app-registry/health
-    sensitive: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus, health, info
