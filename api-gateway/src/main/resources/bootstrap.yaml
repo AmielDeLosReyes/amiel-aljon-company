@@ -3,6 +3,14 @@ spring:
     name: api-gateway
     version: "@project.version@"
   cloud:
+    consul:
+      host: ${CONSUL_HOST:consul-server-client}       # Connect to the Consul Docker container
+      port: ${CONSUL_PORT:8500}       # Consul agent port exposed
+      discovery:
+        service-name: api-gateway
+        register: true
+        enabled: true
+        health-check-interval: 10s
     config:
       uri: ${CONFIG_DEFAULT_ZONE_URL:http://localhost:8888/config}
       profile: ${ACTIVE_PROFILE:dev}
@@ -32,9 +40,8 @@ log:
       path: ${log.eureka.path}/archive/
 
 #Configuration for Health endpoint
-endpoints:
-  health:
-    enabled: true
-    id: health
-    path: /app-registry/health
-    sensitive: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus, health, info

@@ -6,7 +6,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import reactor.core.publisher.Hooks;
 
 @SpringBootApplication
-@EnableDiscoveryClient
 public class ApiGatewayApplication {
 
 	public static void main(String[] args) {
