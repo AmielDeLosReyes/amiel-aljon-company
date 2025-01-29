@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <springProperty scope="context" name="LOG_PATH" source="log.root-path" defaultValue="./logs"/>
+    <springProperty scope="context" name="LOG_LEVEL" source="log.level" defaultValue="INFO"/>
+    <springProperty scope="context" name="LOG_BACKUP_PATH" source="log.backup-root-path" defaultValue="./logs/archive"/>
+    <springProperty scope="context" name="MAX_CHARS" source="log.max-msg-chars" defaultValue="1000"/>
+    <springProperty scope="context" name="QUEUE_SIZE" source="log.queue-size" defaultValue="1024"/>
+    <springProperty scope="context" name="NEVER_BLOCK" source="log.never-block" defaultValue="true"/>
+    <springProperty scope="context" name="DISCARD_THRESHOLD" source="log.discarding-threshold" defaultValue="20"/>
+    <springProperty scope="context" name="SERVER_PORT" source="server.port"/>
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name"/>
+    <springProperty scope="context" name="HIBERNATE_LOG_LEVEL" source="log.hibernate-level" defaultValue="OFF"/>
+
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <charset>UTF-8</charset>
+            <layout class="amiel_aljon.auth_server.config.logger.MaskingPatternLayout">
+                <pattern>%d{ISO8601} %-5level [%t] [${APP_NAME},%X{traceId:-},%X{spanId:-}] [%X{userId:-}] %logger{36} %L : %.-${MAX_CHARS}msg%n
+                </pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <appender name="AsyncConsole" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>${DISCARD_THRESHOLD}
+        </discardingThreshold> <!-- default 20, means drop lower event when has 20% capacity remaining -->
+        <appender-ref ref="Console"/>
+        <queueSize>${QUEUE_SIZE}</queueSize> <!-- default 256 -->
+        <includeCallerData>true</includeCallerData><!-- default false -->
+        <neverBlock>${NEVER_BLOCK}
+        </neverBlock><!-- default false, set to true to cause the Appender not block the application and just drop the messages -->
+    </appender>
+
+    <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${APP_NAME}-${SERVER_PORT}.log</file>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <charset>UTF-8</charset>
+            <layout class="amiel_aljon.auth_server.config.logger.MaskingPatternLayout">
+                <pattern>%d{ISO8601} %-5level [%t] [${APP_NAME},%X{traceId:-},%X{spanId:-}] [%X{userId:-}] %logger{36} %L : %.-${MAX_CHARS}msg%n
+                </pattern>
+            </layout>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily and when the file reaches 10 MegaBytes -->
+            <fileNamePattern>${LOG_BACKUP_PATH}/${APP_NAME}-${SERVER_PORT}.%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="AsyncRollingFile" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>${DISCARD_THRESHOLD}
+        </discardingThreshold> <!-- default 20, means drop lower event when has 20% capacity remaining -->
+        <appender-ref ref="RollingFile"/>
+        <queueSize>${QUEUE_SIZE}</queueSize> <!-- default 256 -->
+        <includeCallerData>true</includeCallerData><!-- default false -->
+        <neverBlock>${NEVER_BLOCK}
+        </neverBlock><!-- default false, set to true to cause the Appender not block the application and just drop the messages -->
+    </appender>
+
+    <!-- LOG everything at INFO level only to console -->
+    <root level="INFO">
+        <appender-ref ref="AsyncConsole"/>
+        <appender-ref ref="AsyncRollingFile"/>
+    </root>
+
+    <logger name="amiel_aljon.auth_server" level="${LOG_LEVEL}" additivity="false">
+        <appender-ref ref="AsyncConsole"/>
+        <appender-ref ref="AsyncRollingFile"/>
+    </logger>
+
+    <!-- LOG "org.springframework*" at INFO level only to console -->
+    <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="${LOG_LEVEL}"
+            additivity="false">
+        <appender-ref ref="AsyncConsole"/>
+        <appender-ref ref="AsyncRollingFile"/>
+    </logger>
+
+    <!-- LOG "org.hibernate*" at OFF by Default -->
+    <logger name="org.hibernate" level="${HIBERNATE_LOG_LEVEL}" additivity="false">
+        <appender-ref ref="AsyncConsole"/>
+        <appender-ref ref="AsyncRollingFile"/>
+    </logger>
+
+</configuration>
