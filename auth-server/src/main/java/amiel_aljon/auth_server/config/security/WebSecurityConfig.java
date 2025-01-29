@@ -39,7 +39,16 @@ public class WebSecurityConfig {
                 .cors(Customizer.withDefaults())  // Enable CORS
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for simplicity
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/registration/**", "/login/**", "/auth/**", "/test/**").permitAll();
+                    auth.requestMatchers(
+                            "/registration/**",
+                            "/login/**",
+                            "/auth/**",
+                            "/test/**").permitAll();
+                    auth.requestMatchers(
+                            "/v3/api-docs/**",
+                            "/swagger-ui/**",
+                            "/swagger-ui.html"
+                    ).permitAll();
                     auth.requestMatchers("/user/**").hasAnyRole("USER", "ADMIN");
                     auth.requestMatchers("/admin/**").hasRole("ADMIN");
                     auth.anyRequest().authenticated();
@@ -69,16 +78,16 @@ public class WebSecurityConfig {
         return new DefaultAuthenticationEventPublisher();
     }
 
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.addAllowedOrigin("http://localhost:4200"); // Allow your frontend origin
-//        configuration.addAllowedMethod("*"); // Allow all HTTP methods (GET, POST, etc.)
-//        configuration.addAllowedHeader("*"); // Allow all headers
-//        configuration.setAllowCredentials(true); // Allow credentials if needed
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("*"); // Allow your frontend origin
+        configuration.addAllowedMethod("*"); // Allow all HTTP methods (GET, POST, etc.)
+        configuration.addAllowedHeader("*"); // Allow all headers
+        configuration.setAllowCredentials(true); // Allow credentials if needed
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }
