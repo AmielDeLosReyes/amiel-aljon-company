@@ -34,3 +34,17 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /swagger-ui.html
+
+log:
+  level: DEBUG
+  root-path: ./logs
+  backup-root-path: ./logs/archive
+  max-msg-chars: 1000
+  queue-size: 1024
+  never-block: true
+  discarding-threshold: 20
+  hibernate-level: OFF
+
+logging:
+  level:
+    root: INFO
