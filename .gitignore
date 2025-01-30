@@ -34,3 +34,5 @@ build/
 
 .DS_Store
 
+# Exclude logs directory
+logs/
