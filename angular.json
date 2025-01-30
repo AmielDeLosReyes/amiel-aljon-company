@@ -1,5 +1,5 @@
 {
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "$schema": "node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
@@ -21,15 +21,39 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
+              "src/assets",
               {
                 "glob": "**/*",
                 "input": "public"
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/assets/css/bootstrap.css",
+              "src/assets/css/font-awesome.min.css",
+              "src/assets/css/icon-font.min.css",
+              "src/assets/css/animate.css",
+              "src/assets/css/hamburgers.min.css",
+              "src/assets/css/animsition.min.css",
+              "src/assets/css/select2.min.css",
+              "src/assets/css/daterangepicker.css",
+              "src/assets/css/util.css",
+              "src/assets/css/main.css"
             ],
-            "scripts": [],
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "src/assets/js/jquery-3.2.1.min.js",
+              "src/assets/js/animsition.min.js",
+              "src/assets/js/popper.js",
+              "src/assets/js/bootstrap.min.js",
+              "src/assets/js/select2.min.js",
+              "src/assets/js/moment.min.js",
+              "src/assets/js/daterangepicker.js",
+              "src/assets/js/countdowntime.js",
+              "src/assets/js/main.js"
+            ],
             "server": "src/main.server.ts",
             "outputMode": "server",
             "ssr": {
@@ -84,6 +108,8 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
+              "src/assets",
+              "src/favicon.ico",
               {
                 "glob": "**/*",
                 "input": "public"
