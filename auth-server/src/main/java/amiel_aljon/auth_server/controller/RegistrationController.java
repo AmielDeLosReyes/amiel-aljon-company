@@ -20,7 +20,7 @@ public class RegistrationController {
 
     private RegistrationService registrationService;
 
-//    @CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/register-user")
     public ResponseEntity<Map<String, String>> register(@RequestBody @Valid RegistrationRequest request) {
         log.info("Inside register()." + getClass().getSimpleName());

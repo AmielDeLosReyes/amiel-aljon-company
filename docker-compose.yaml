@@ -56,6 +56,23 @@ services:
       CONSUL_HOST: consul
       CONSUL_PORT: 8500
 
+  auth-server:
+    image: auth-server-image
+    build:
+      context: ./auth-server
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    depends_on:
+      - service-registry
+      - config-server
+      - consul
+    networks:
+      - app-network
+    environment:
+      CONSUL_HOST: consul
+      CONSUL_PORT: 8500
+
 #  prometheus:
 #    image: prom/prometheus:latest
 #    container_name: prometheus
